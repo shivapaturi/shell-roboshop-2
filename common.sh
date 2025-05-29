@@ -35,6 +35,7 @@ app_setup(){
     unzip /tmp/$app_name.zip &>>$LOG_FILE
     VALIDATE $? "unzipping $app_name"
 }
+
 nodejs_setup(){
     dnf module disable nodejs -y &>>$LOG_FILE
     VALIDATE $? "Disabling default nodejs"
@@ -46,7 +47,30 @@ nodejs_setup(){
     VALIDATE $? "Installing nodejs:20"
 
     npm install &>>$LOG_FILE
-VALIDATE $? "Installing Dependencies"
+    VALIDATE $? "Installing Dependencies"
+}
+
+maven_setup(){
+    dnf install maven -y &>>$LOG_FILE
+    VALIDATE $? "Installing Maven and Java"
+
+    mvn clean package  &>>$LOG_FILE
+    VALIDATE $? "Packaging the shipping application"
+
+    mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
+    VALIDATE $? "Moving and renaming Jar file"
+}
+
+python_setup(){
+    dnf install python3 gcc python3-devel -y &>>$LOG_FILE
+    VALIDATE $? "Install Python3 packages"
+
+    pip3 install -r requirements.txt &>>$LOG_FILE
+    VALIDATE $? "Installing dependencies"
+
+    cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOG_FILE
+    VALIDATE $? "Copying payment service"
+
 }
 
 systemd_setup(){
@@ -58,6 +82,7 @@ systemd_setup(){
     systemctl start $app_name
     VALIDATE $? "Starting $app_name"
 }
+
 check_root(){
     if [ $USERID -ne 0 ]
     then
@@ -67,6 +92,7 @@ check_root(){
         echo "You are running with root access" | tee -a $LOG_FILE
     fi
 }
+
 # validate functions takes input as exit status, what command they tried to install
 VALIDATE(){
     if [ $1 -eq 0 ]
@@ -80,6 +106,6 @@ VALIDATE(){
 
 print_time(){
     END_TIME=$(date +%s)
-    TOTAL_TIME=$($END_TIME - $START_TIME)
-    echo -e "Script executed successfull, $Y Time taken: $TOTAL_TIME seconds $N"
+    TOTAL_TIME=$(($END_TIME - $START_TIME))
+    echo -e "Script executed successfully, $Y Time taken: $TOTAL_TIME seconds $N"
 }
