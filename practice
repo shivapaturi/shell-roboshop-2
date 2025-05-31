@@ -13,6 +13,7 @@
 # python3_setup(){
 
 # }
+set -e
 
 echo "Hi, Good Morning"
 echooo "Hello shiva"
