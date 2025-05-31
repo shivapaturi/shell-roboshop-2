@@ -1,11 +1,10 @@
 #!/bin/bash
 
 set -e
-
-failure(){
-
+functions(){
+    echo "failure at: $1 $2"
 }
-trap 'failure $LINENO."' ERR
+trap 'failure "$LINENO"' ERR
 START_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
