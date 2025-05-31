@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# nodejs_setup(){
+#     #code to install nodejs
+# }
+
+# check_root(){
+#     #check script is root access or not
+# }
+# maven_setup(){
+#     #maven installation
+# }
+# python3_setup(){
+
+# }
+
+echo "Hi, Good Morning"
+echooo "Hello shiva"
+echo "shiva"
